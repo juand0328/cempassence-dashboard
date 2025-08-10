@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2113.65">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.s1 {font: 12.0px 'Apple Color Emoji'}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="es"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Panel de Lanzamiento: Cempassence&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&amp;family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chosen Palette: Warm Neutrals &amp; Gold --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Application Structure Plan: Se ha diseñado un panel de control interactivo de una sola página con navegación por pestañas para cada una de las 4 semanas de la campaña. Esta estructura permite al usuario enfocarse en una fase a la vez (Intriga, Educación, Lanzamiento, Consolidación), facilitando la gestión y ejecución del plan. Dentro de cada semana, el usuario puede ver el calendario de publicaciones, un mapa visual del feed, y un desglose del tipo de contenido. Esta organización por tareas es más intuitiva que una lista lineal, ya que agrupa la información por su propósito y momento en la campaña, mejorando la usabilidad y la planificación estratégica. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Visualization &amp; Content Choices: El plan de 4 semanas se presenta con pestañas interactivas (HTML/JS) para una navegación clara. El "Mapa Visual del Feed" se convierte en una cuadrícula interactiva (HTML/Tailwind/JS) que muestra detalles al pasar el mouse, simulando la experiencia de planificación. Para visualizar la distribución de contenido (Reels, Stories, Feed), se utiliza un gráfico de dona dinámico (Chart.js), que se actualiza por semana, ofreciendo un resumen cuantitativo rápido. Los copys y hashtags se presentan en tarjetas expandibles (HTML/JS) para no saturar la vista principal. Estas elecciones priorizan la interactividad y la claridad de los datos, evitando elementos estáticos y confirmando el uso exclusivo de Canvas para gráficos, sin SVG ni Mermaid. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Lato', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #FDFBF8;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #4A4A4A;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h1, h2, h3, h4, .font-serif {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Cormorant Garamond', serif;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab-active {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-color: #D4AF37;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #D4AF37;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab-inactive {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-color: transparent;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #6B7280;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.feed-grid-item .overlay {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: opacity 0.3s ease-in-out;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.feed-grid-item:hover .overlay {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>opacity: 1;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease-in-out;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-4px);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -2px rgb(0 0 0 / 0.07);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="antialiased"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="bg-white py-6 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="container mx-auto px-6 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-4xl md:text-5xl font-bold text-gray-800"&gt;Cempassence&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-lg text-gray-600 mt-2 font-serif"&gt;Panel Interactivo de Lanzamiento en Instagram&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="container mx-auto px-6 py-12"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="text-center mb-12"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-3xl font-semibold text-gray-800"&gt;Estrategia de Contenido para 4 Semanas&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mt-2 text-gray-600 max-w-2xl mx-auto"&gt;Esta es tu hoja de ruta para un lanzamiento exitoso. Navega por cada semana para descubrir los objetivos, el contenido planificado y los recursos necesarios.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Tabs de Navegación por Semana --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-8 border-b border-gray-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;nav class="flex -mb-px space-x-6" aria-label="Tabs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="changeWeek(1)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-active" data-week="1"&gt;Semana 1: Intriga&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="changeWeek(2)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-inactive" data-week="2"&gt;Semana 2: Educación&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="changeWeek(3)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-inactive" data-week="3"&gt;Semana 3: Lanzamiento&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="changeWeek(4)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-inactive" data-week="4"&gt;Semana 4: Consolidación&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/nav&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Contenido de la Semana (Dinámico) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="week-content"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- El contenido se inyectará aquí con JS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;footer class="bg-white mt-12 py-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="container mx-auto px-6 text-center text-gray-500 text-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;&amp;copy; 2025 Cempassence. Todos los derechos reservados.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const launchData = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>1: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "Semana 1: Intriga",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>objective: "Generar curiosidad y empezar a construir una comunidad sin revelar el producto. El feed debe sentirse como un moodboard estético y misterioso.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>contentDistribution: { feed: 2, stories: 2, reels: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>visualFeed: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Frase', content: 'POST 1' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Textura', content: 'POST 2' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Reel Atmosférico', content: 'POST 3' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dailyPlan: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Lunes', type: 'Feed', template: 'Frase', copy: 'El estilo es una forma de decir quién eres sin tener que hablar. Prepárate para encontrar tu nueva voz.', hashtags: '#Próximamente #Cempassence' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Martes', type: 'Stories', template: 'Encuesta', copy: 'Tu mood de hoy es... <span class="s1">✨</span> Elegante y Clásico vs <span class="s1">💥</span> Atrevido y Moderno', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Miércoles', type: 'Reel', template: 'Atmosférico', copy: 'Los detalles no son solo detalles. Ellos diseñan tu esencia.', hashtags: '#EstiloPersonal #AromasQueHablan' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Jueves', type: 'Feed', template: 'Textura', copy: 'La elegancia está en la sutileza. Muy pronto.', hashtags: '#ComingSoon #HechoEnMexico' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Viernes', type: 'Stories', template: 'Pregunta', copy: 'Un aroma puede transportarte a...', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>2: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "Semana 2: Educación",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>objective: "Revelar el concepto de la marca y empezar a educar al público sobre el valor diferencial, construyendo confianza y anticipación.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>contentDistribution: { feed: 2, stories: 2, reels: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>visualFeed: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Silueta', content: 'POST 4' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Revelación Logo', content: 'POST 5' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Carrusel Educativo', content: 'POST 6' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dailyPlan: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Lunes', type: 'Feed', template: 'Revelación Logo', copy: 'Nace una nueva esencia. CEMPASSENCE. Inspiración de alta gama, alma mexicana. Síguenos y activa las notificaciones...', hashtags: '#Cempassence #PerfumeriaMexicana' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Martes', type: 'Stories', template: 'Sabías que', copy: '¿Sabías que... aplicar perfume en los puntos de pulso hace que la fragancia dure más?', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Miércoles', type: 'Feed', template: 'Carrusel', copy: 'Desliza y desmitifica el mundo de las fragancias con nosotros. ¿Conocías alguno de estos mitos? Te leemos <span class="s1">👇</span>', hashtags: '#PerfumesInspirados #BeautyTips' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Jueves', type: 'Reel', template: 'Behind the Scenes', copy: 'Cada detalle cuenta. Estamos preparando algo muy especial para ti. La cuenta regresiva comienza...', hashtags: '#BehindTheScenes #EmprendimientoMexicano' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Viernes', type: 'Stories', template: 'Countdown', copy: 'Nuestra revelación está cerca.', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>3: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "Semana 3: Lanzamiento",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>objective: "Presentar los productos, generar un fuerte deseo de compra y fomentar la interacción masiva y las primeras ventas.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>contentDistribution: { feed: 2, stories: 2, reels: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>visualFeed: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Producto Individual', content: 'POST 7' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Video Producto', content: 'POST 8' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Lifestyle', content: 'POST 9' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dailyPlan: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Lunes', type: 'Feed', template: 'Producto', copy: '¡EL DÍA LLEGÓ! <span class="s1">✨</span> Ya puedes encontrar tu nueva esencia. Te presentamos la colección debut de Cempassence... <span class="s1">🛒</span> Link en bio para comprar.', hashtags: '#Lanzamiento #CempassenceLaunch' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Martes', type: 'Stories', template: 'Testimonio', copy: '(Ideal para compartir las primeras reacciones o un testimonio de alguna influencer que ya probó el producto).', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Miércoles', type: 'Feed', template: 'Notas Olfativas', copy: 'Conoce "Aura Floral", una fragancia radiante y femenina. Inspirada en la elegancia de los grandes clásicos.', hashtags: '#AuraFloral #NotasOlfativas' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Jueves', type: 'Reel', template: 'GRWM', copy: 'El toque final que no se ve, pero se siente. Cempassence en mi rutina diaria.', hashtags: '#GRWM #GetReadyWithMe' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Viernes', type: 'Stories', template: 'UGC', copy: '¡Nos encanta ver cómo usas tu Cempassence! Etiquétanos @cempassence.mx y usa #MiCempassence para un feature.', hashtags: '' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>4: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "Semana 4: Consolidación",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>objective: "Fidelizar a los primeros clientes, recolectar prueba social (testimonios, UGC) y mantener el impulso de ventas post-lanzamiento.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>contentDistribution: { feed: 2, stories: 0, reels: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>visualFeed: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Notas Olfativas', content: 'POST 10' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Reseña Cliente', content: 'POST 11' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ type: 'Colección Completa', content: 'POST 12' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dailyPlan: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Lunes', type: 'Feed', template: 'Lifestyle', copy: 'La confianza es tu mejor accesorio. El segundo mejor, es este.', hashtags: '#Confianza #EstiloDiario' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Miércoles', type: 'Reel', template: 'Tip de uso', copy: 'Tip Cempassence: Aplica perfume sobre tu bufanda o abrigo para que el aroma te acompañe todo el día sin irritar tu piel.', hashtags: '#BeautyHacks #TipsDePerfume' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{ day: 'Viernes', type: 'Feed', template: 'Testimonio', copy: 'Lo que ustedes dicen de nosotros. <span class="s1">✨</span> Desliza para leer un testimonio real y descubre por qué aman Cempassence.', hashtags: '#ComunidadCempassence #TestimoniosReales' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let contentChart = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function renderWeek(weekNumber) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const data = launchData[weekNumber];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const contentDiv = document.getElementById('week-content');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const visualFeedHTML = data.visualFeed.map(post =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="feed-grid-item relative aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-center p-2 cursor-pointer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="z-10"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="font-semibold text-gray-700 text-sm"&gt;${post.content}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-xs text-gray-500"&gt;${post.type}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="overlay absolute inset-0 bg-black bg-opacity-60 rounded-lg flex items-center justify-center text-white p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm font-bold"&gt;${post.type}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dailyPlanHTML = data.dailyPlan.map(plan =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="card bg-white p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4 class="font-bold text-gray-800"&gt;${plan.day}&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-xs font-semibold px-2 py-1 rounded-full ${</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>plan.type === 'Feed' ? 'bg-blue-100 text-blue-800' :<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>plan.type === 'Stories' ? 'bg-purple-100 text-purple-800' : 'bg-pink-100 text-pink-800'</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}"&gt;${plan.type}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-gray-600 mt-2"&gt;&lt;strong&gt;Plantilla:&lt;/strong&gt; ${plan.template}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-gray-700 mt-2"&gt;${plan.copy}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${plan.hashtags ? `&lt;p class="text-xs text-gray-500 mt-3 font-mono"&gt;${plan.hashtags}&lt;/p&gt;` : ''}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>contentDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="week-${weekNumber}" class="week-panel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-lg p-6 mb-8 card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-2xl font-semibold text-gray-800"&gt;${data.title}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="mt-2 text-gray-600"&gt;${data.objective}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-1 md:grid-cols-3 gap-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="md:col-span-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                             </span>&lt;h3 class="text-xl font-semibold text-gray-800 mb-4"&gt;Calendario de Publicaciones&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                             </span>&lt;div class="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>${dailyPlanHTML}</p>
+<p class="p1"><span class="Apple-converted-space">                             </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="space-y-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="text-xl font-semibold text-gray-800 mb-4"&gt;Distribución de Contenido&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="chart-container bg-white p-4 rounded-lg h-64 max-h-64 w-full max-w-sm mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;canvas id="content-dist-chart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="text-xl font-semibold text-gray-800 mb-4"&gt;Mapa Visual del Feed&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="grid grid-cols-3 gap-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>${visualFeedHTML}</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderChart(data.contentDistribution);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function renderChart(distributionData) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ctx = document.getElementById('content-dist-chart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const data = {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>labels: ['Posts de Feed', 'Stories', 'Reels'],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>data: [distributionData.feed, distributionData.stories, distributionData.reels],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>backgroundColor: ['#60A5FA', '#C084FC', '#F472B6'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>borderColor: '#FDFBF8',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>borderWidth: 4,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>hoverOffset: 8</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (contentChart) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>contentChart.destroy();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>contentChart = new Chart(ctx, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'doughnut',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: data,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cutout: '70%',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>legend: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>position: 'bottom',</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>labels: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>font: {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>family: "'Lato', sans-serif"</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>padding: 15,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>usePointStyle: true,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>pointStyle: 'circle'</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                             </span>font: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>family: "'Lato', sans-serif"</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>callbacks: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>label: function(context) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>let label = context.label || '';</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>if (label) {</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>label += ': ';</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>if (context.parsed !== null) {</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>label += context.parsed;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>return label;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function changeWeek(weekNumber) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.tab-btn').forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.classList.remove('tab-active');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.classList.add('tab-inactive');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (parseInt(btn.dataset.week) === weekNumber) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>btn.classList.add('tab-active');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>btn.classList.remove('tab-inactive');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderWeek(weekNumber);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.onload = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderWeek(1);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
